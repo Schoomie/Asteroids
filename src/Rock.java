@@ -1,55 +1,107 @@
-/**
- * Created by Kuba on 01/03/2019.
- */
 import java.awt.*;
-public class Rock extends Polygon {
+import java.util.ArrayList;
+
+// Extending the Polygon class because I'm drawing Polygons
+
+class Rock extends Polygon{
+
+    // Upper left hand corner of the Polygon
 
     int uLeftXPos, uLeftYPos;
+
+    // Used to change the direction of the asteroid when
+    // it hits something and determines how fast it moves
 
     int xDirection = 1;
     int yDirection = 1;
 
-    int width = Main.boardWidth;
-    int height = Main.boardHeight;
+    // Define rock height and width
+
+    int rockWidth = 26;
+    int rockHeight = 31;
+
+    // Copy of the Rock ArrayList
+
+    // Holds every Rock I create
+
+    static ArrayList<Rock> rocks = new ArrayList<Rock>();
+
+    // For JApplet
+    // int width = ExampleBoard.WIDTH;
+    // int height = ExampleBoard.HEIGHT;
+
+    // Get the board width and height
+
+    int width = GameBoard.boardWidth;
+    int height = GameBoard.boardHeight;
+
+    // Will hold the x & y coordinates for the Polygons
 
     int[] polyXArray, polyYArray;
-    //starting positions
-    public static int[] sPolyXArray = {10, 13, 15, 16, 17, 14, 15, 18};
 
-    public static int[] sPolyYArray = {5, 1, 5, 6, 8, 3, 15, 18};
+    // x & y positions available for other methods
+    // There will be more Polygon points available later
 
-    public Rock(int[] polyXArray, int[] polyYArray, int pointsInPoly, int randomStartXPosition, int randomStartYPosition) {
+    public static int[] sPolyXArray = {10,17,26,34,27,36,26,14,8,1,5,1,10};
+    public static int[] sPolyYArray = {0,5,1,8,13,20,31,28,31,22,16,7,0};
+
+    // Creates a new asteroid
+
+    public Rock(int[] polyXArray, int[] polyYArray, int pointsInPoly, int randomStartXPos, int randomStartYPos){
+
+        // Creates a Polygon by calling the super or parent class of Rock Polygon
+
         super(polyXArray, polyYArray, pointsInPoly);
+
+        // Randomly generate a speed for the Polygon
+
         this.xDirection = (int) (Math.random() * 4 + 1);
 
         this.yDirection = (int) (Math.random() * 4 + 1);
 
-        this.uLeftXPos = randomStartXPosition;
-        this.uLeftYPos = randomStartYPosition;
+        // Holds the starting x & y position for the Rock
 
+        this.uLeftXPos = randomStartXPos;
+
+        this.uLeftYPos = randomStartYPos;
 
     }
 
-    public void move() {
-        int uLeftXpos = super.xpoints[0];
-        int uLeftYpos = super.ypoints[0];
+    public void move(){
 
-        if (uLeftXPos < 0 || uLeftXPos + 25 > width) xDirection = -xDirection;
+        // Get the upper left and top most point for the Polygon
+        // This will be dynamic later on
 
-        if (uLeftYPos < 0 || uLeftYPos + 25 > width) xDirection = -yDirection;
-//rysowanie
-        for (int i = 0; i < super.xpoints.length; i++) {
+        int uLeftXPos = super.xpoints[0];
+
+        int uLeftYPos = super.ypoints[0];
+
+        // If the Rock hits a wall it will go in the opposite direction
+
+        if (uLeftXPos < 0 || (uLeftXPos + 25) > width) xDirection = -xDirection;
+
+        if (uLeftYPos < 0 || (uLeftYPos + 50) > height) yDirection = -yDirection;
+
+        // Change the values of the points for the Polygon
+
+        for (int i = 0; i < super.xpoints.length; i++){
+
             super.xpoints[i] += xDirection;
             super.ypoints[i] += yDirection;
+
         }
+
     }
 
-    public static int[] getpolyXArray(int randomStartXPos) {
+    // public method available for creating Polygon x point arrays
 
+    public static int[] getpolyXArray(int randomStartXPos){
 
-        int[] tempPolyXArray = (int[]) sPolyXArray.clone();
+        // Clones the array so that the original shape isn't changed for the asteroid
 
-        for (int i = 0; i < tempPolyXArray.length; i++) {
+        int[] tempPolyXArray = (int[])sPolyXArray.clone();
+
+        for (int i = 0; i < tempPolyXArray.length; i++){
 
             tempPolyXArray[i] += randomStartXPos;
 
@@ -59,11 +111,15 @@ public class Rock extends Polygon {
 
     }
 
-    public static int[] getpolyYArray(int randomStartYPos) {
+    // public method available for creating Polygon y point arrays
 
-        int[] tempPolyYArray = (int[]) sPolyYArray.clone();
+    public static int[] getpolyYArray(int randomStartYPos){
 
-        for (int i = 0; i < tempPolyYArray.length; i++) {
+        // Clones the array so that the original shape isn't changed for the asteroid
+
+        int[] tempPolyYArray = (int[])sPolyYArray.clone();
+
+        for (int i = 0; i < tempPolyYArray.length; i++){
 
             tempPolyYArray[i] += randomStartYPos;
 
@@ -71,6 +127,6 @@ public class Rock extends Polygon {
 
         return tempPolyYArray;
 
-
     }
+
 }
