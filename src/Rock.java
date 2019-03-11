@@ -21,7 +21,6 @@ class Rock extends Polygon{
     int rockHeight = 31;
 
     // Copy of the Rock ArrayList
-
     // Holds every Rock I create
 
     static ArrayList<Rock> rocks = new ArrayList<Rock>();
@@ -45,6 +44,15 @@ class Rock extends Polygon{
     public static int[] sPolyXArray = {10,17,26,34,27,36,26,14,8,1,5,1,10};
     public static int[] sPolyYArray = {0,5,1,8,13,20,31,28,31,22,16,7,0};
 
+    // NEW Keep track of whether Rock is on screen
+
+    public boolean onScreen = true;
+
+    // NEW Sound file names
+    // The JavaSound api allows wavs, au, aiff files
+
+    String explodeFile = "file:./src/explode.wav";
+
     // Creates a new asteroid
 
     public Rock(int[] polyXArray, int[] polyYArray, int pointsInPoly, int randomStartXPos, int randomStartYPos){
@@ -67,7 +75,100 @@ class Rock extends Polygon{
 
     }
 
-    public void move(){
+    // Creates a bounding rectangle for collision checking
+
+    public Rectangle getBounds() {
+
+        return new Rectangle(super.xpoints[0], super.ypoints[0], rockWidth, rockHeight);
+
+    }
+
+    // NEW move receives SpaceShip and Torpedos now
+    public void move(SpaceShip theShip, ArrayList<PhotonTorpedo> torpedos){
+
+        // This rectangle surrounds the rock I'll check against
+        // all of the other rocks below
+
+        Rectangle rockToCheck = this.getBounds();
+
+        // Cycle through all the other rocks and check if they
+        // cross over the rectangle I created above
+
+        for(Rock rock : rocks){
+
+            // NEW Is rock viewable
+
+            if(rock.onScreen){
+
+                // Creates a bounding rectangle that is used temporarily
+                // for each other rock on the board
+
+                Rectangle otherRock = rock.getBounds();
+
+                // Check to make sure I'm not comparing one rock to itself
+                // Check if one rock crosses over another rock
+
+                if(rock != this && otherRock.intersects(rockToCheck)){
+
+                    // Switch the direction the rocks are moving on impact
+
+                    int tempXDirection = this.xDirection;
+                    int tempYDirection = this.yDirection;
+
+                    this.xDirection = rock.xDirection;
+                    this.yDirection = rock.yDirection;
+
+                    rock.xDirection = tempXDirection;
+                    rock.yDirection = tempYDirection;
+
+                }
+
+                // NEW Check if theShip hits a Rock
+
+                Rectangle shipBox = theShip.getBounds();
+
+                if(otherRock.intersects(shipBox)){
+
+                    // NEW play explosion if ship is hit
+
+                    GameBoard.playSoundEffect(explodeFile);
+
+                    theShip.setXCenter(theShip.gBWidth/2);
+                    theShip.setYCenter(theShip.gBHeight/2);
+
+                    theShip.setXVelocity(0);
+                    theShip.setYVelocity(0);
+
+
+                }
+
+                for(PhotonTorpedo torpedo : torpedos){
+
+                    // Make sure the Torpedo is on the screen
+
+                    if(torpedo.onScreen){
+
+                        // NEW Check if a torpedo hits a Rock
+
+                        if(otherRock.contains(torpedo.getXCenter(),torpedo.getYCenter())){
+
+                            rock.onScreen = false;
+                            torpedo.onScreen = false;
+
+                            System.out.println("HIT");
+
+                            // NEW play explosion sound if rock is destroyed
+
+                            GameBoard.playSoundEffect(explodeFile);
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
 
         // Get the upper left and top most point for the Polygon
         // This will be dynamic later on
