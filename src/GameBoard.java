@@ -1,27 +1,17 @@
 // Layout used by the JPanel
-import java.awt.BorderLayout;
-
-// Define color of shapes
-import java.awt.Color;
-
-// Allows me to draw and render shapes on components
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-
-// Will hold all of my Rock objects
 import java.util.ArrayList;
-
-// Runs commands after a given delay
 import java.util.concurrent.ScheduledThreadPoolExecutor;
-
-// Defines time units. In this case TimeUnit.MILLISECONDS
 import java.util.concurrent.TimeUnit;
 
-import javax.swing.JComponent;
-import javax.swing.JFrame;
+// Define color of shapes
+// Allows me to draw and render shapes on components
+// Will hold all of my Rock objects
+// Runs commands after a given delay
+// Defines time units. In this case TimeUnit.MILLISECONDS
 
 public class GameBoard extends JFrame{
 
@@ -137,8 +127,8 @@ class GameDrawingPanel extends JComponent {
 
     // Gets the game board height and weight
 
-    int width = Lesson50.boardWidth;
-    int height = Lesson50.boardHeight;
+    int width = GameBoard.boardWidth;
+    int height = GameBoard.boardHeight;
 
     // Creates 50 Rock objects and stores them in the ArrayList
 
@@ -149,8 +139,8 @@ class GameDrawingPanel extends JComponent {
             // Find a random x & y starting point
             // The -40 part is on there to keep the Rock on the screen
 
-            int randomStartXPos = (int) (Math.random() * (Lesson50.boardWidth - 40) + 1);
-            int randomStartYPos = (int) (Math.random() * (Lesson50.boardHeight - 40) + 1);
+            int randomStartXPos = (int) (Math.random() * (GameBoard.boardWidth - 40) + 1);
+            int randomStartYPos = (int) (Math.random() * (GameBoard.boardHeight - 40) + 1);
 
             // Add the Rock object to the ArrayList based on the attributes sent
 
